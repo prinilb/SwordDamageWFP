@@ -4,7 +4,7 @@ using System.Text;
 using System.Diagnostics;
 
 
-namespace SwordDamageWFP
+namespace SwordDamageWFP // Chapter 5 - Encapsulation (specifically practiced using encapsulation due to some bugs)
 {
     class SwordDamage
     {
