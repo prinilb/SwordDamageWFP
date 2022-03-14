@@ -2,50 +2,68 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
-
-namespace SwordDamageWFP // Chapter 5 - Encapsulation (specifically practiced using encapsulation due to some bugs)
+namespace SwordDamageWFP
 {
     class SwordDamage
     {
-        public const int BASE_DAMAGE = 3;
-        public const int FLAME_DAMAGE = 2;
+        private const int BASE_DAMAGE = 3;
+        private const int FLAME_DAMAGE = 2;
 
-        public int Roll;
-        private decimal magicMultiplier = 1M;
-        private int flamingDamage = 0;
-        public int Damage;
+        public int Damage { get; private set; }
+
+        private int roll; // backing field
+        public int Roll // set property automcatically updates the Damage
+        {
+            get { return roll; }
+            set
+            {
+                roll = value;
+                CalculateDamage();
+            }
+        }
+
+        private bool magic;
+        public bool Magic
+        {
+            get { return magic; }
+            set
+            {
+                magic = value;
+                CalculateDamage();
+            }
+        }
+
+        private bool flaming;
+        public bool Flaming
+        {
+            get { return flaming; }
+            set
+            {
+                flaming = value;
+                CalculateDamage();
+
+            }
+        }
 
         private void CalculateDamage()
         {
-            Damage = (int)(Roll * magicMultiplier) + BASE_DAMAGE + flamingDamage;
-            Debug.WriteLine($"CalculatedDamage finished: {Damage} (roll: {Roll}) ");
+            decimal magicMultiplier = 1M;
+            if (Magic) magicMultiplier = 1.75M;
+
+            Damage = BASE_DAMAGE;
+            Damage = (int)(Roll * magicMultiplier) + BASE_DAMAGE;
+            if (Flaming) Damage += FLAME_DAMAGE;
         }
 
-        public void SetMagic(bool isMagic)
+        public SwordDamage(int startingRoll) // constructor using the defaults of magic and flaming
         {
-            if (isMagic)
-            {
-                magicMultiplier = 1.75M;
-            }
-
-            else
-            {
-                magicMultiplier = 1M; // what's the point of putting this here if the MagicMultiplier only ever gets changed if the bool isMagic = True??
-            }
-
+            roll = startingRoll;
             CalculateDamage();
-            Debug.WriteLine($"SetMagic finished: {Damage} (roll: {Roll}) ");
-        }
-
-        public void SetFlaming(bool isFlaming)
-        {
-            CalculateDamage();
-            if(isFlaming)
-            {
-                Damage += FLAME_DAMAGE;
-            }
-            Debug.WriteLine($"SetFlaming finished: {Damage} (roll: {Roll}) ");
         }
     }
 }
+
